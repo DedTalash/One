@@ -9,6 +9,8 @@ using System.Linq;
 using Microsoft.Extensions.Http;
 using System.Threading.Tasks;
 using System.Net.Http;
+using System.Net;
+using System.IO;
 
 namespace One.Controllers
 {
@@ -36,18 +38,31 @@ namespace One.Controllers
             _httpClient = httpClient;
         }
 
+        public WeatherForecast GetWeatherFtomSite(double lat, double lon)
+        {
+            string url = "http://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&units=metric&appid={_key}";
+            HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
+            HttpWebResponse httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+            string answer;
+            using (StreamReader streamReader =
+                new StreamReader(httpWebResponse.GetResponseStream())) 
+            {
+                answer = streamReader.ReadToEnd();
+            };
+            WeatherForecast weatherForecast = JsonConvert.DeserializeObject<WeatherForecast>(answer);
+                return weatherForecast;
+        }
 
 
-        
 
         [HttpGet]
         public async Task<IEnumerable<WeatherForecast>> GetAsync(double lat, double lon)
         {
             //string key = "c5ecf5f5261efc0bfed1e6552cd5c6ca";
+            
+            //var responseString = await _httpClient.GetStringAsync(http://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={_key});
 
-            var responseString = await _httpClient.GetStringAsync($"api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={_key}");
-
-            var weather = JsonConvert.DeserializeObject<WeatherForecast>(responseString);
+            //var weather = JsonConvert.DeserializeObject<WeatherForecast>(responseString);
            
 
             //var jobId = BackgroundJob.Schedule(

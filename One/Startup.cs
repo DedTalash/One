@@ -32,6 +32,7 @@ namespace One
             services.AddControllers();
             services.AddSwaggerGen();
             services.AddHttpClient<IWeatherMapClient, WeatherMapClientImpl>();
+            services.AddTransient<IWeatherMapClient, WeatherMapClientImpl>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
