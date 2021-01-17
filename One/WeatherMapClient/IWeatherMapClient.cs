@@ -7,14 +7,6 @@ namespace One.WeatherMapClient
 {
     public interface IWeatherMapClient
     {
-        Task<decimal> GetWeather(string location); 
-    }
-
-    public class WeatherMapClientImpl : IWeatherMapClient
-    {
-        public  Task<decimal> GetWeather(string location)
-        {
-            return  Task.FromResult(10m);
-        }
+        Task<CurrentWeather> GetWeather(double lat, double lon); 
     }
 }
