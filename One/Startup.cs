@@ -27,12 +27,12 @@ namespace One
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddHangfire(x => x.UsePostgreSqlStorage(Configuration.GetSection("DbConection").Get<string>()));
-            services.AddHangfireServer();
+            // services.AddHangfire(x => x.UsePostgreSqlStorage(Configuration.GetSection("DbConection").Get<string>()));
+            // services.AddHangfireServer();
             services.AddControllers();
             services.AddSwaggerGen();
             services.AddHttpClient<IWeatherMapClient, WeatherMapClientImpl>();
-            services.AddTransient<IWeatherMapClient, WeatherMapClientImpl>();
+            // services.AddTransient<IWeatherMapClient, WeatherMapClientImpl>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -53,7 +53,7 @@ namespace One
             });
 
             app.UseRouting();
-            app.UseHangfireDashboard();
+            // app.UseHangfireDashboard();
 
             app.UseEndpoints(endpoints =>
             {
