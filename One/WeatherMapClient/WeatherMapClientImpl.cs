@@ -73,7 +73,7 @@ namespace One.WeatherMapClient
             _httpClient = httpClient;
         }
 
-        public async Task<CurrentWeather> GetWeather(double lat, double lon)
+        public async Task<CurrentWeather> GetWeather(decimal lat, decimal lon)
         {
             var url = $"http://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&units=metric&appid={Key}";
             var result = await _httpClient.GetStringAsync(url);

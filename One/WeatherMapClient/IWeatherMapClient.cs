@@ -7,6 +7,6 @@ namespace One.WeatherMapClient
 {
     public interface IWeatherMapClient
     {
-        Task<CurrentWeather> GetWeather(double lat, double lon); 
+        Task<CurrentWeather> GetWeather(decimal lat, decimal lon); 
     }
 }

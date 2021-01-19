@@ -31,6 +31,7 @@ namespace One
             // services.AddHangfireServer();
             services.AddControllers();
             services.AddSwaggerGen();
+            
             services.AddHttpClient<IWeatherMapClient, WeatherMapClientImpl>();
             // services.AddTransient<IWeatherMapClient, WeatherMapClientImpl>();
         }
