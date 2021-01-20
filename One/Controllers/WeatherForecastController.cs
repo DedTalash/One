@@ -11,6 +11,8 @@ using System.Threading.Tasks;
 using System.Net.Http;
 using System.Net;
 using System.IO;
+using One.Core;
+using One.Core.DTO;
 
 namespace One.Controllers
 {
@@ -19,11 +21,6 @@ namespace One.Controllers
     public class WeatherForecastController : ControllerBase
     {
         private readonly IWeatherMapClient _weatherMapClient;
-
-        private static readonly string[] Summaries = new[]
-        {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
 
         private readonly ILogger<WeatherForecastController> _logger;
 
@@ -46,7 +43,7 @@ namespace One.Controllers
 
 
         [HttpGet("{lat}/{lon}")]
-        public async Task<WeatherForecast> GetAsync(double lat, double lon)
+        public async Task<WeatherDto> GetAsync(decimal lat, decimal lon)
         {
             //string key = "c5ecf5f5261efc0bfed1e6552cd5c6ca";
             
@@ -59,13 +56,8 @@ namespace One.Controllers
             //    () => _logger.LogInformation($"Weather client: {_weatherMapClient.GetWeather("")}"),
             //    TimeSpan.FromSeconds(1));
             var weather = await _weatherMapClient.GetWeather(lat, lon);
-            return new WeatherForecast
-            {
-                Date = DateTime.Now,
-                TemperatureC = weather.main.temp,
-                Lat = lat,
-                Lon = lon
-            };
+            return weather;
+            
         }
     }
 }

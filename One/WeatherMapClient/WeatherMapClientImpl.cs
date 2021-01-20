@@ -1,8 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using One.Core;
+using One.Core.DTO;
 
 namespace One.WeatherMapClient
 {
@@ -73,11 +76,19 @@ namespace One.WeatherMapClient
             _httpClient = httpClient;
         }
 
-        public async Task<CurrentWeather> GetWeather(decimal lat, decimal lon)
+        public async Task<WeatherDto> GetWeather(decimal lat, decimal lon)
         {
             var url = $"http://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&units=metric&appid={Key}";
             var result = await _httpClient.GetStringAsync(url);
-            return JsonConvert.DeserializeObject<CurrentWeather>(result);
-        }
+            var currentWeather = JsonConvert.DeserializeObject<CurrentWeather>(result);
+            return new WeatherDto
+            {
+                FeelLike = currentWeather.main.feels_like,
+                Temp = currentWeather.main.temp,
+                Pressure = currentWeather.main.pressure,
+                Humidity = currentWeather.main.humidity,
+                Date = DateTime.Now
+            };
+          }
     }
 }

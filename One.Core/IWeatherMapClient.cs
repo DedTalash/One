@@ -1,12 +1,13 @@
-﻿using System;
+﻿using One.Core.DTO;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace One.WeatherMapClient
+namespace One.Core
 {
     public interface IWeatherMapClient
     {
-        Task<CurrentWeather> GetWeather(decimal lat, decimal lon); 
+        Task<WeatherDto> GetWeather(decimal lat, decimal lon); 
     }
 }
