@@ -20,14 +20,15 @@ namespace One.Controllers
     [Route("[controller]")]
     public class WeatherForecastController : ControllerBase
     {
-        private readonly IWeatherMapClient _weatherMapClient;
+        private readonly WeatherService _weatherService;
+        
 
         private readonly ILogger<WeatherForecastController> _logger;
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger, IWeatherMapClient weatherMapClient)
+        public WeatherForecastController(ILogger<WeatherForecastController> logger, WeatherService weatherService)
         {
             _logger = logger;
-            _weatherMapClient = weatherMapClient;
+            _weatherService = weatherService;
         }
 
         // public WeatherForecast GetWeatherFtomSite(double lat, double lon)
@@ -55,7 +56,7 @@ namespace One.Controllers
             //var jobId = BackgroundJob.Schedule(
             //    () => _logger.LogInformation($"Weather client: {_weatherMapClient.GetWeather("")}"),
             //    TimeSpan.FromSeconds(1));
-            var weather = await _weatherMapClient.GetWeather(lat, lon);
+            var weather = await _weatherService.GetWeather(lat, lon);
             return weather;
             
         }

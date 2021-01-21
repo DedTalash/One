@@ -25,7 +25,7 @@ namespace One.DB
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseNpgsql("host=localhost;database=One;user id=postgres;password=zayash;");
+                optionsBuilder.UseNpgsql("Host=localhost;Database=One;User ID=postgres;Password=zayash;");
             }
         }
 
@@ -37,7 +37,9 @@ namespace One.DB
             {
                 entity.ToTable("coord");
 
-                entity.Property(e => e.Id).HasColumnName("id");
+                entity.Property(e => e.Id)
+                    .ValueGeneratedNever()
+                    .HasColumnName("id");
 
                 entity.Property(e => e.Lat).HasColumnName("lat");
 
@@ -46,9 +48,14 @@ namespace One.DB
 
             modelBuilder.Entity<Weather>(entity =>
             {
-                entity.HasNoKey();
+                entity.HasKey(e => e.Key)
+                    .HasName("weather_pkey");
 
                 entity.ToTable("weather");
+
+                entity.Property(e => e.Key)
+                    .ValueGeneratedNever()
+                    .HasColumnName("key");
 
                 entity.Property(e => e.Date)
                     .HasColumnType("date")
@@ -56,7 +63,9 @@ namespace One.DB
 
                 entity.Property(e => e.FeelLike).HasColumnName("feel_like");
 
-                entity.Property(e => e.Humidity).HasColumnName("humidity");
+                entity.Property(e => e.Humidity)
+                    .IsRequired()
+                    .HasColumnName("humidity");
 
                 entity.Property(e => e.Id).HasColumnName("id");
 
