@@ -37,9 +37,7 @@ namespace One.DB
             {
                 entity.ToTable("coord");
 
-                entity.Property(e => e.Id)
-                    .ValueGeneratedNever()
-                    .HasColumnName("id");
+                entity.Property(e => e.Id).HasColumnName("id");
 
                 entity.Property(e => e.Lat).HasColumnName("lat");
 
@@ -53,9 +51,7 @@ namespace One.DB
 
                 entity.ToTable("weather");
 
-                entity.Property(e => e.Key)
-                    .ValueGeneratedNever()
-                    .HasColumnName("key");
+                entity.Property(e => e.Key).HasColumnName("key");
 
                 entity.Property(e => e.Date)
                     .HasColumnType("date")
@@ -63,11 +59,11 @@ namespace One.DB
 
                 entity.Property(e => e.FeelLike).HasColumnName("feel_like");
 
-                entity.Property(e => e.Humidity)
-                    .IsRequired()
-                    .HasColumnName("humidity");
+                entity.Property(e => e.Humidity).HasColumnName("humidity");
 
-                entity.Property(e => e.Id).HasColumnName("id");
+                entity.Property(e => e.Id)
+                    .IsRequired()
+                    .HasColumnName("id");
 
                 entity.Property(e => e.Pressure).HasColumnName("pressure");
 

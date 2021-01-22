@@ -11,9 +11,7 @@ namespace One.DB
 {
     public class WeatherRepo : IWeatherRepo
     {
-        private static int staticId = 1;
-        private static int staticKey = 1;
-        public int? IsId(decimal lat, decimal lon)
+        public string IsId(decimal lat, decimal lon)
         {
             using var db = new OneContext();
             //var res = db.Coords.Where(elem => elem.Lat == lat && elem.Lon == lon).Select(elem => elem.Id);
@@ -22,12 +20,13 @@ namespace One.DB
             return res;
 
         }
-        public WeatherDto GetWeatherFromDB(int id)
+        public WeatherDto GetWeatherFromDB(string id)
         {
             using var db = new OneContext();
             {
-                int MaxKey = db.Weathers.Where(elem => elem.Id == id).Max(elem => elem.Key);
-                var res = db.Weathers.Find(MaxKey);
+                DateTime lastDate = db.Weathers.Where(elem => elem.Id == id).Max(elem => elem.Date);
+                var key = db.Weathers.FirstOrDefault(elem=> elem.Date==lastDate && elem.Id == id).Key;
+                var res = db.Weathers.Find(key);
                 return new WeatherDto
                 {
                     Date = res.Date,
@@ -39,30 +38,29 @@ namespace One.DB
             }
         }
 
-        public int InsertCoord(decimal lat, decimal lon)
+        public string InsertCoord(decimal lat, decimal lon)
         {
             using (var db = new OneContext())
             {
                 db.Add(new Coord
                 {
-                    Id = staticId,
+                    Id = Guid.NewGuid().ToString(),
                     Lat = lat,
                     Lon = lon
                 });
                 db.SaveChanges();
-                staticId++;
                 var res = db.Coords.FirstOrDefault(elem => elem.Lat == lat && elem.Lon == lon)?.Id;
-                return res.Value;
+                return res;
             }
         }
 
-        public void InsertWeather(int id, WeatherDto currentWeather)
+        public void InsertWeather(string id, WeatherDto currentWeather)
         {
             using (var db = new OneContext())
             {
                 db.Add(new Weather
                 {
-                    Key = staticKey,
+                    Key = Guid.NewGuid().ToString(),
                     Date = currentWeather.Date,
                     FeelLike = currentWeather.FeelLike,
                     Id = id,
@@ -71,14 +69,13 @@ namespace One.DB
                     Temp = currentWeather.Temp
                 });
                 db.SaveChanges();
-                staticKey++;
             }
         }
 
 
         public WeatherDto GetCurrentWeather(decimal lat, decimal lon)
         {
-            return GetWeatherFromDB(IsId(lat, lon).Value);
+            return GetWeatherFromDB(IsId(lat, lon));
         }
 
         public List<CoordDto> GetAllCoord()

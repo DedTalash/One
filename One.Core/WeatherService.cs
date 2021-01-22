@@ -24,10 +24,10 @@ namespace One.Core
           var ID = weatherRepo.IsId(lat, lon);
             if (ID != null)
             {
-                return weatherRepo.GetWeatherFromDB(ID.Value);
+                return weatherRepo.GetWeatherFromDB(ID);
             }
             var currentWebWeather = await weatherMapClient.GetWeather(lat,lon);
-            int newId = weatherRepo.InsertCoord(lat, lon);
+            string newId = weatherRepo.InsertCoord(lat, lon);
             weatherRepo.InsertWeather(newId,currentWebWeather );
             return currentWebWeather;
         }
