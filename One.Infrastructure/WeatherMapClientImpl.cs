@@ -1,13 +1,12 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using One.Core;
 using One.Core.DTO;
+using One.Core.Interfaces;
 
-namespace One.WeatherMapClient
+namespace One.Infrastructure
 {
     // Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse); 
     public class Coord    {
@@ -65,20 +64,21 @@ namespace One.WeatherMapClient
         public int cod { get; set; } 
     }
 
+    // TODO: Move this classes to the Infrastructure project
     public class WeatherMapClientImpl : IWeatherMapClient
     {
-        private const string Key = "c5ecf5f5261efc0bfed1e6552cd5c6ca";
-        
+        private readonly string _key;
         private readonly HttpClient _httpClient;
 
-        public WeatherMapClientImpl(HttpClient httpClient)
+        public WeatherMapClientImpl(string key, HttpClient httpClient)
         {
+            _key = key;
             _httpClient = httpClient;
         }
 
         public async Task<WeatherDto> GetWeather(decimal lat, decimal lon)
         {
-            var url = $"http://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&units=metric&appid={Key}";
+            var url = $"http://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&units=metric&appid={_key}";
             var result = await _httpClient.GetStringAsync(url);
             var currentWeather = JsonConvert.DeserializeObject<CurrentWeather>(result);
             return new WeatherDto

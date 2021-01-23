@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using One.Core.Interfaces;
 
 namespace One.Core
 
@@ -24,10 +25,10 @@ namespace One.Core
           var ID = weatherRepo.IsId(lat, lon);
             if (ID != null)
             {
-                return weatherRepo.GetWeatherFromDB(ID);
+                return await weatherRepo.GetWeatherFromDB(ID);
             }
             var currentWebWeather = await weatherMapClient.GetWeather(lat,lon);
-            string newId = weatherRepo.InsertCoord(lat, lon);
+            var newId = weatherRepo.InsertCoord(lat, lon);
             weatherRepo.InsertWeather(newId,currentWebWeather );
             return currentWebWeather;
         }

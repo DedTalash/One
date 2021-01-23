@@ -11,7 +11,7 @@ namespace One.Core
         WeatherDto GetCurrentWeather(decimal lat, decimal lon);
         
         string IsId(decimal lat, decimal lon);
-        WeatherDto GetWeatherFromDB(string id);
+        Task<WeatherDto> GetWeatherFromDB(string id);
         string InsertCoord(decimal lat, decimal lon);
         void InsertWeather(string id, WeatherDto currentWeather);
         List<CoordDto> GetAllCoord();
