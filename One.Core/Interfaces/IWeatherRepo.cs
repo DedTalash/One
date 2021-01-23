@@ -8,14 +8,11 @@ namespace One.Core
 {
     public interface IWeatherRepo
     {
-        WeatherDto GetCurrentWeather(decimal lat, decimal lon);
-        
-        string IsId(decimal lat, decimal lon);
+        Task<WeatherDto> GetCurrentWeather(decimal lat, decimal lon);
+        Task<string> IsId(decimal lat, decimal lon);
         Task<WeatherDto> GetWeatherFromDB(string id);
-        string InsertCoord(decimal lat, decimal lon);
-        void InsertWeather(string id, WeatherDto currentWeather);
-        List<CoordDto> GetAllCoord();
-
-
+        Task<string> InsertCoord(decimal lat, decimal lon);
+        Task InsertWeather(string id, WeatherDto currentWeather);
+        Task<List<CoordDto>> GetAllCoord();
     }
 }

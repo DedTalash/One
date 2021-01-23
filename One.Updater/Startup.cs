@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using One.Core;
 using One.Core.Interfaces;
 using One.DB;
@@ -44,13 +45,15 @@ namespace One.Updater
             }
             
             app.UseRouting();
-            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+            app.UseEndpoints(endpoints => { 
+                endpoints.MapControllers();
+                endpoints.MapHangfireDashboard();
+            });
             
-            app.UseHangfireDashboard();
             
             RecurringJob.AddOrUpdate<WeatherService>(
                 "weather-update",
-                s => s.UpdateBD(),
+                s => s.UpdateDB(),
                 Cron.Daily);
         }
     }

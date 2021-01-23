@@ -7,6 +7,7 @@ using One.Core;
 using One.DB;
 using One.Core.Interfaces;
 using One.Infrastructure;
+using Microsoft.Extensions.Logging;
 
 namespace One
 {
@@ -26,7 +27,7 @@ namespace One
             var apiKey = Configuration.GetSection("ApiKey").Get<string>();
             services.AddControllers();
             services.AddSwaggerGen();
-            services.AddHttpClient<IWeatherMapClient>(cl => new WeatherMapClientImpl(apiKey, cl));
+            services.AddHttpClient<IWeatherMapClient>(cl => new WeatherMapClientImpl(apiKey,cl));
             services.AddTransient<IWeatherRepo>(ctx => new WeatherRepo(connectionString));
             services.AddTransient<WeatherService>();
         }

@@ -1,8 +1,5 @@
-﻿using One.Core;
-using One.Core.DTO;
-using System;
+﻿using One.Core.DTO;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using One.Core.Interfaces;
 
@@ -11,35 +8,35 @@ namespace One.Core
 {
     public class WeatherService
     {
-        private readonly IWeatherMapClient weatherMapClient;
-        private readonly IWeatherRepo weatherRepo;
+        private readonly IWeatherMapClient _weatherMapClient;
+        private readonly IWeatherRepo _weatherRepo;
 
         public WeatherService(IWeatherMapClient weatherMapClient, IWeatherRepo weatherRepo)
         {
-            this.weatherMapClient = weatherMapClient;
-            this.weatherRepo = weatherRepo;
+            _weatherMapClient = weatherMapClient;
+            _weatherRepo = weatherRepo;
         }
 
-        public async Task<WeatherDto> GetWeather(decimal lat, decimal lon) 
+        public async Task<WeatherDto> GetWeather(decimal lat, decimal lon)
         {
-          var ID = weatherRepo.IsId(lat, lon);
-            if (ID != null)
+            var id = _weatherRepo.IsId(lat, lon);
+            if (id != null)
             {
-                return await weatherRepo.GetWeatherFromDB(ID);
+                return await _weatherRepo.GetWeatherFromDB(id.GetAwaiter().GetResult());
             }
-            var currentWebWeather = await weatherMapClient.GetWeather(lat,lon);
-            var newId = weatherRepo.InsertCoord(lat, lon);
-            weatherRepo.InsertWeather(newId,currentWebWeather );
+            var currentWebWeather = await _weatherMapClient.GetWeather(lat, lon);
+            var newId = _weatherRepo.InsertCoord(lat, lon).GetAwaiter().GetResult();
+            await _weatherRepo.InsertWeather(newId, currentWebWeather);
             return currentWebWeather;
         }
 
-        public async Task UpdateBD()
+        public async Task UpdateDB()
         {
-           List<CoordDto> list = weatherRepo.GetAllCoord();
+            List<CoordDto> list = await _weatherRepo.GetAllCoord();
             foreach (CoordDto l in list)
             {
-                var currentWebWeather = await weatherMapClient.GetWeather(l.Lat, l.Lon);
-                weatherRepo.InsertWeather(l.Id, currentWebWeather);
+                var currentWebWeather = await _weatherMapClient.GetWeather(l.Lat, l.Lon);
+                await _weatherRepo.InsertWeather(l.Id, currentWebWeather);
             }
         }
     }
