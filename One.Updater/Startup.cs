@@ -1,4 +1,5 @@
 using System;
+using System.Net.Http;
 using Hangfire;
 using Hangfire.PostgreSql;
 using Microsoft.AspNetCore.Builder;
@@ -30,8 +31,17 @@ namespace One.Updater
             var apiKey = Configuration.GetSection("ApiKey").Get<string>();
             services.AddHangfire(x => x.UsePostgreSqlStorage(connectionString));
             services.AddHangfireServer();
-            services.AddHttpClient<IWeatherMapClient>(cl => new WeatherMapClientImpl(apiKey, cl));
-            services.AddTransient<IWeatherRepo>(ctx => new WeatherRepo(connectionString));
+            services.AddHttpClient();
+            services.AddTransient<IWeatherMapClient>(sp =>
+            {
+                var clientFactory = sp.GetRequiredService<IHttpClientFactory>();
+                return new WeatherMapClientImpl(apiKey, clientFactory.CreateClient());
+            });
+            services.AddTransient<IWeatherRepo>(sp =>
+            {
+                var logger = sp.GetRequiredService<ILogger<WeatherRepo>>();
+                return new WeatherRepo(connectionString, logger);
+            });
             services.AddTransient<WeatherService>();
             services.AddControllers();
         }

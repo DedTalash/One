@@ -1,3 +1,4 @@
+using System.Net.Http;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -27,8 +28,17 @@ namespace One
             var apiKey = Configuration.GetSection("ApiKey").Get<string>();
             services.AddControllers();
             services.AddSwaggerGen();
-            services.AddHttpClient<IWeatherMapClient>(cl => new WeatherMapClientImpl(apiKey,cl));
-            services.AddTransient<IWeatherRepo>(ctx => new WeatherRepo(connectionString));
+            services.AddHttpClient();
+            services.AddTransient<IWeatherMapClient>(sp =>
+            {
+                var clientFactory = sp.GetRequiredService<IHttpClientFactory>();
+                return new WeatherMapClientImpl(apiKey, clientFactory.CreateClient());
+            });
+            services.AddTransient<IWeatherRepo>(sp =>
+            {
+                var logger = sp.GetRequiredService<ILogger<WeatherRepo>>();
+                return new WeatherRepo(connectionString, logger);
+            });
             services.AddTransient<WeatherService>();
         }
 

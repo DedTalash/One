@@ -16,9 +16,10 @@ namespace One.DB
         private readonly string _connectionString;
         private readonly ILogger<WeatherRepo> _logger;
 
-        public WeatherRepo(string connectionString)
+        public WeatherRepo(string connectionString, ILogger<WeatherRepo> logger)
         {
             _connectionString = connectionString;
+            _logger = logger;
         }
 
         public async Task<string> IsId(decimal lat, decimal lon)
