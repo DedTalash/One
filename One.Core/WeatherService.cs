@@ -19,10 +19,10 @@ namespace One.Core
 
         public async Task<WeatherDto> GetWeather(decimal lat, decimal lon)
         {
-            var id = _weatherRepo.IsId(lat, lon);
+            var id = await _weatherRepo.IsId(lat, lon);
             if (id != null)
             {
-                return await _weatherRepo.GetWeatherFromDB(id.GetAwaiter().GetResult());
+                return await _weatherRepo.GetWeatherFromDB(id);
             }
             var currentWebWeather = await _weatherMapClient.GetWeather(lat, lon);
             var newId = _weatherRepo.InsertCoord(lat, lon).GetAwaiter().GetResult();
